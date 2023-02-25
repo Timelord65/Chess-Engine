@@ -1,0 +1,7 @@
+Things I need to do: 
+
+Generate a chess board and render the pieces. - GUI 
+Be able to take input from the GUI. 
+Then write the background chess engine. 
+
+
