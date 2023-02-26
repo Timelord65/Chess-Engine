@@ -1,4 +1,3 @@
-#!c:/Python/python.exe
 from time import sleep
 import os
 from copy import deepcopy
@@ -14,6 +13,8 @@ dh = 600    #Stands for display height
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+black = (0, 0, 0)
+white = (255, 255, 255)
 
 
 
@@ -27,4 +28,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-    gameDisplay.fill(red)
+    gameDisplay.fill(white)
+
+    pygame.display.update()
+
+pygame.quit()
+quit()

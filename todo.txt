@@ -5,3 +5,11 @@ Be able to take input from the GUI.
 Then write the background chess engine. 
 
 
+800 width and 600 height
+
+To make it centered, we have to give it unsymmetrical padding. 
+
+Board should be on 400x400
+width padding == 400, height padding = 200
+
+
