@@ -6,6 +6,7 @@ import pygame
 import sys
 import chess
 
+board = chess.Board()
 pygame.init()
 
 dw = 800    #Stands for display width
@@ -131,9 +132,35 @@ def drawBackground(): #Function to draw the background chess board.
             
             #print("Current i: %d, Current j: %d, Current: %s, prev: %s" %(i, j, current, prev_color))
 
-def drawBoard(board): #Function to display the pychess board on the GUI. 
-    pass
+def drawBoard(board): #Function to display the pychess board on the GUI. Translate the fenstring from pychess board to positions on the chess_board
+    char_piece_map = {
+        'k': disp_Blackking,
+        'q': disp_Blackqueen,
+        'b': disp_Blackbishop,
+        'n': disp_Blackknight,
+        'r': disp_Blackrook,
+        'p': disp_Blackpawn,
+        'K': disp_Whiteking,
+        'Q': disp_Whitequeen,
+        'B': disp_Whitebishop,
+        'N': disp_Whiteknight,
+        'R': disp_Whiterook,
+        'P': disp_Whitepawn
+    }
+    
+    #tile = 0
+    fenString = board.fen()
+    fen = fenString.split(' ')[0]
+    for i in range(8):
+        row = fen.split('/')[i]
+        j = 0
+        for c in row:
 
+            if c.isalpha():
+                char_piece_map[c](200 + 50*j, 100 + 50*i)
+                j += 1
+            else:
+                j += ord(c) - 49
 
     
 gameDisplay = pygame.display.set_mode((dw, dh))
@@ -147,8 +174,8 @@ while running:
             running = False
         
     drawBackground()
+    drawBoard(board)
     #gameDisplay.fill(white)
-    disp_Whiteknight(200, 200)
 
     pygame.display.update()
 
