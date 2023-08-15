@@ -149,7 +149,8 @@ def drawBoard(board): #Function to display the pychess board on the GUI. Transla
     }
     
     #tile = 0
-    fenString = board.fen()
+    #fenString = board.fen()
+    fenString = "r1bkr/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1"
     fen = fenString.split(' ')[0]
     for i in range(8):
         row = fen.split('/')[i]
@@ -160,7 +161,7 @@ def drawBoard(board): #Function to display the pychess board on the GUI. Transla
                 char_piece_map[c](200 + 50*j, 100 + 50*i)
                 j += 1
             else:
-                j += ord(c) - 49
+                j += ord(c) - 48
 
     
 gameDisplay = pygame.display.set_mode((dw, dh))
