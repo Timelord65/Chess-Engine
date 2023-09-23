@@ -117,6 +117,35 @@ def disp_Whitepawn(x, y, gameDisplay):
     return
 
 
+def getSquare(pos):
+    x, y = pos
+    x = (x-200)//50
+    y = (y-100)//50
+    sq = x + (7-y)*8
+    return chess.SQUARE_NAMES[sq]
+
+
+
+
+def pieceSelection(buffer, selection, pos, gameDisplay):
+    square = getSquare(pos)
+    buffer += square
+
+    if selection == False: #Meaning selection is done. We have to get the legality from the previous square and present position square.
+        chess_move = chess.Move.from_uci(buffer)
+        legal = chess_move in board.legal_moves
+        buffer = ""
+
+        if legal:
+            board.push(chess_move)
+            print("It's legal to do so!!")
+        else:
+            print("FBI OPEN UP!!")
+
+    return buffer
+
+
+
 # Function to draw the background chess board.
 def drawBackground(gameDisplay):
     boundaryRect = pygame.Rect((200, 100), (400, 400))
@@ -161,8 +190,8 @@ def drawBoard(board, gameDisplay):  # Function to display the pychess board on t
     }
 
     # tile = 0
-    # fenString = board.fen()
-    fenString = "r1bkr/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1"
+    fenString = board.fen()
+    #fenString = "r1bkr/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1"
     fen = fenString.split(' ')[0]
     for i in range(8):
         row = fen.split('/')[i]
@@ -177,6 +206,8 @@ def drawBoard(board, gameDisplay):  # Function to display the pychess board on t
 
 
 def main():
+    selection = False
+    buffer = ""
     gameDisplay = pygame.display.set_mode((dw, dh))
     pygame.display.set_caption('Chess Game')
 
@@ -184,6 +215,10 @@ def main():
 
     while running:
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP:
+                selection = not (selection)
+                pos = pygame.mouse.get_pos()
+                buffer = pieceSelection(buffer, selection, pos, gameDisplay)
             if event.type == pygame.QUIT:
                 running = False
 

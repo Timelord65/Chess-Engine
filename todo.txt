@@ -1,21 +1,21 @@
-Things I need to do: 
+Things I need to do:
 
-Generate a chess board and render the pieces. - GUI 
-Be able to take input from the GUI. 
-Then write the background chess engine. 
+Generate a chess board and render the pieces. - GUI
+Be able to take input from the GUI.
+Then write the background chess engine.
 
 
 800 width and 600 height
 
-To make it centered, we have to give it unsymmetrical padding. 
+To make it centered, we have to give it unsymmetrical padding.
 
 Board should be on 400x400
 width padding == 200, height padding = 100
 Top left of board = (200, 100)
 Bottom right of board = (600, 500)
 
-Instead of black and white squares, we render green and white. 
+Instead of black and white squares, we render green and white.
 Each square is a 50x50
 
 
-
+Presently working on taking input from GUI.
