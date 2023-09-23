@@ -1,8 +1,8 @@
 Things I need to do:
 
-Generate a chess board and render the pieces. - GUI
-Be able to take input from the GUI.
-Then write the background chess engine.
+Generate a chess board and render the pieces. - GUI ==> DONE
+Be able to take input from the GUI. ==> DONE
+Then write the background chess engine. ==> WORKING
 
 
 800 width and 600 height
@@ -16,6 +16,3 @@ Bottom right of board = (600, 500)
 
 Instead of black and white squares, we render green and white.
 Each square is a 50x50
-
-
-Presently working on taking input from GUI.
