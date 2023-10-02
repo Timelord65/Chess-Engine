@@ -1,3 +1,5 @@
+#+Date: 
+
 Things I need to do:
 
 Generate a chess board and render the pieces. - GUI ==> DONE
@@ -16,3 +18,7 @@ Bottom right of board = (600, 500)
 
 Instead of black and white squares, we render green and white.
 Each square is a 50x50
+
+
+Major Code Change request from the sole contributor:
+ - FOr fucks sake write chess_board.py in oops implementation. What sort of barbarian shit is that. Doesn't matter how much of a fan you are of C, give up your sticks and stones idiot (maintainer).

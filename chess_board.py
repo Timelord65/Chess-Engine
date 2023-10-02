@@ -4,10 +4,13 @@ import pygame
 from time import sleep
 import os
 from copy import deepcopy
+from main import *
+from typing import Final
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 board = chess.Board()
 pygame.init()
+turn = 1
 
 dw = 800  # Stands for display width
 dh = 600  # Stands for display height
@@ -20,6 +23,7 @@ white = (255, 255, 255)
 
 P_assets = "./assets"
 
+depth: Final = 8
 
 def disp_Blackking(x, y, gameDisplay):
     piece_name = "black king"
@@ -127,7 +131,7 @@ def getSquare(pos):
 
 
 
-def pieceSelection(buffer, selection, pos, gameDisplay):
+def pieceSelection(turn, buffer, selection, pos, gameDisplay):
     square = getSquare(pos)
     buffer += square
 
@@ -138,11 +142,13 @@ def pieceSelection(buffer, selection, pos, gameDisplay):
 
         if legal:
             board.push(chess_move)
+            assert(turn==1)
+            turn = 0
             print("It's legal to do so!!")
         else:
             print("FBI OPEN UP!!")
 
-    return buffer
+    return buffer, turn
 
 
 
@@ -205,7 +211,7 @@ def drawBoard(board, gameDisplay):  # Function to display the pychess board on t
                 j += ord(c) - 48
 
 
-def main():
+if __name__=="__main__":
     selection = False
     buffer = ""
     gameDisplay = pygame.display.set_mode((dw, dh))
@@ -214,14 +220,27 @@ def main():
     running = True
 
     while running:
+        if turn == 0:
+            print("it got here")
+            evaluation, board = MinMax(board, depth, 0, turn)
+            turn = 1
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP:
                 selection = not (selection)
                 pos = pygame.mouse.get_pos()
-                buffer = pieceSelection(buffer, selection, pos, gameDisplay)
+                assert(turn==1)
+                buffer, turn = pieceSelection(turn, buffer, selection, pos, gameDisplay)
+                print("Turn after pieceSelection: " + (str(turn)))
             if event.type == pygame.QUIT:
                 running = False
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_SPACE:
+            #         print(board.outcome().winner)
+            #         print(board.outcome().termination)
 
+        if board.is_checkmate():
+            print("The game ended. Someone won!!")
+            running = False
         drawBackground(gameDisplay)
         drawBoard(board, gameDisplay)
         # gameDisplay.fill(white)
@@ -230,6 +249,3 @@ def main():
 
     pygame.quit()
     quit()
-
-
-main()
