@@ -5,6 +5,7 @@ from time import sleep
 import os
 from copy import deepcopy
 from main import *
+INF = 1000000
 from typing import Final
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
@@ -221,8 +222,11 @@ if __name__=="__main__":
 
     while running:
         if turn == 0:
-            print("it got here")
-            evaluation, board = MinMax(board, depth, 0, turn)
+            print("Computer is thinking...")
+            evaluation, best_move = MinMax(board, depth, -INF, INF, turn)
+            if best_move is not None:
+                board.push(best_move)
+                print(f"Computer played: {best_move}")
             turn = 1
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP:

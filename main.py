@@ -18,48 +18,64 @@ def material_balance(board):
         9 * (chess.popcount(white & board.queens) - chess.popcount(black & board.queens))
     )
 
-def MinMax(board, depth=4, comp_plays=0, turn=0) -> int:
-    # Turn == 1 for white and Turn == 0 for black
-
-
-    # Insert Code for checking end game conditions and assigining appropriate evaluations
-    if board.is_checkmate():
-        return INF * (-1 if turn==1 else 1), board
-    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.can_claim_fifty_moves() or board.can_claim_draw():
-        return 0.5, board
-
-    if depth == 0 or depth < 0:
-        return -1 * material_balance(board), board
-
-    candidates = {}
+def quiescence_search(board, alpha, beta, turn):
+    """Quiescence search to handle captures at end of search depth"""
+    stand_pat = material_balance(board) * (1 if turn == 1 else -1)
+    
+    if stand_pat >= beta:
+        return beta
+    if alpha < stand_pat:
+        alpha = stand_pat
+    
+    # Only consider captures in quiescence search
     for move in board.legal_moves:
-        # print("stuff")
-        # print(board.outcome())
-        # print(candidates.keys())
-        # print(move)
-        depth -= 1
-        A = deepcopy(board)
-        # print(move)
-        A.push_san(str(move))
-        turn = (1 if turn==0 else 0)
-        print(MinMax(A, depth, 0, turn))
-        evaluation, something = MinMax(A, depth, 0, turn)
-        print(evaluation)
-        try:
-            candidates[evaluation].append(A)
-        except KeyError:
-            candidates[evaluation] = []
-            candidates[evaluation].append(A)
+        if board.is_capture(move):
+            board.push(move)
+            score = -quiescence_search(board, -beta, -alpha, 1 - turn)
+            board.pop()
+            
+            if score >= beta:
+                return beta
+            if score > alpha:
+                alpha = score
+    
+    return alpha
 
-    print(candidates.keys())
+def MinMax(board, depth=4, alpha=-INF, beta=INF, turn=0):
+    # Turn == 1 for white and Turn == 0 for black
+    
+    # Check end game conditions
+    if board.is_checkmate():
+        return INF * (-1 if turn==1 else 1), None
+    elif board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition() or board.can_claim_fifty_moves() or board.can_claim_draw():
+        return 0, None
 
-    current_max = -100000000
-    print(candidates.keys())
-    for k in candidates.keys():
-        if k > current_max:
-            current_max = k
+    if depth == 0:
+        # Use quiescence search for captures
+        evaluation = quiescence_search(board, alpha, beta, turn)
+        return evaluation, None
 
-    print(board)
-    board = candidates[k][0]
-    print(board)
-    return (-1 * material_balance(board)), board
+    best_move = None
+    best_evaluation = -INF if turn == 1 else INF
+    
+    for move in board.legal_moves:
+        board.push(move)
+        evaluation, _ = MinMax(board, depth - 1, alpha, beta, 1 - turn)
+        board.pop()
+        
+        if turn == 1:  # White's turn - maximize
+            if evaluation > best_evaluation:
+                best_evaluation = evaluation
+                best_move = move
+            alpha = max(alpha, evaluation)
+            if beta <= alpha:
+                break  # Alpha-beta pruning
+        else:  # Black's turn - minimize
+            if evaluation < best_evaluation:
+                best_evaluation = evaluation
+                best_move = move
+            beta = min(beta, evaluation)
+            if beta <= alpha:
+                break  # Alpha-beta pruning
+
+    return best_evaluation, best_move
